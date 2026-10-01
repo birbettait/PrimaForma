@@ -1,0 +1,10 @@
+{
+  "name": "primaforma",
+  "version": "1.0.0",
+  "private": true,
+  "type": "module",
+  "scripts": {
+    "start": "python3 server.py",
+    "test": "node --test && python3 -m unittest -q"
+  }
+}

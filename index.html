@@ -1,0 +1,69 @@
+<!doctype html>
+<html lang="it">
+<head>
+  <meta charset="utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1">
+  <title>PrimaForma - Archivio locale</title>
+  <link rel="icon" href="data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 64 64'%3E%3Crect width='64' height='64' rx='14' fill='%23176b9f'/%3E%3Ctext x='32' y='43' text-anchor='middle' font-family='Arial' font-size='27' fill='white'%3EPF%3C/text%3E%3C/svg%3E">
+  <link rel="stylesheet" href="styles.css">
+</head>
+<body>
+  <div class="app-shell">
+    <header class="app-header">
+      <div class="brand"><img id="brandLogo" src="default-logo.svg" alt="Logo"><div><span class="eyebrow">Documenti locali</span><h1>PrimaForma</h1></div></div>
+      <div class="header-actions"><span class="local-badge">Archivio locale</span><button type="button" id="printButton" class="primary-button">Stampa / salva PDF</button></div>
+    </header>
+
+    <main class="workspace">
+      <form id="invoiceForm" class="editor" novalidate>
+        <div class="editor-heading"><span class="eyebrow" id="editorMode">Nuovo documento</span><h2>Compila i dettagli</h2><p>Inserisci la prestazione e controlla l’anteprima prima di salvare il PDF.</p></div>
+
+        <section class="form-section">
+          <h3>Progetti e prestazioni</h3>
+          <p class="field-hint">Ogni progetto ha una descrizione e un importo propri.</p>
+          <div id="projectItems" class="project-items"></div>
+          <button type="button" id="addProject" class="secondary-button add-project">+ Aggiungi progetto</button>
+          <datalist id="savedProjectNames"></datalist>
+          <div class="project-catalog"><h4>Nomi progetto salvati</h4><div id="projectCatalog" class="project-catalog-list"></div></div>
+          <div class="options">
+            <label class="check-row"><input type="checkbox" id="stamp" name="stamp" checked><span><strong>Marca da bollo</strong><small>2,00 € sul totale del documento</small></span></label>
+            <label class="check-row"><input type="checkbox" id="contribution" name="contribution" checked><span><strong>Rivalsa GS INPS 4%</strong><small>Calcolata sul totale dei progetti + eventuale bollo</small></span></label>
+          </div>
+        </section>
+
+        <section class="form-section">
+          <h3>Documento e destinatario</h3>
+          <div class="field-grid"><div><label for="number">Numero iniziale</label><input id="number" name="number" type="number" min="1" step="1" value="1" required></div><div><label for="year">Anno</label><input id="year" name="year" type="number" min="2000" max="9999" required></div></div>
+          <div class="field-grid"><div><label for="date">Data</label><input id="date" name="date" type="date" required></div><div><label for="dueDate">Scadenza</label><input id="dueDate" name="dueDate" type="date" required></div></div>
+          <label for="savedClient">Clienti salvati</label><select id="savedClient" name="savedClient"><option value="">Seleziona un cliente</option></select>
+          <div class="client-actions"><button type="button" id="newClient" class="text-button">Nuovo cliente</button><button type="button" id="saveClient" class="text-button">Salva cliente</button><button type="button" id="deleteClient" class="text-button danger-text" disabled>Elimina cliente</button></div>
+          <label for="clientName">Ragione sociale / nome</label><input id="clientName" name="clientName" placeholder="Es. Cliente Demo S.r.l." required>
+          <label for="clientStreet">Indirizzo</label><input id="clientStreet" name="clientStreet" placeholder="Es. Via Esempio 1">
+          <label for="clientCity">CAP, città e provincia</label><input id="clientCity" name="clientCity" placeholder="Es. 00100 Roma (RM)">
+          <label for="clientVat">Partita IVA / codice fiscale</label><input id="clientVat" name="clientVat" placeholder="Inserisci il dato del cliente">
+        </section>
+
+        <details class="form-section more-fields"><summary>Intestazione e pagamento</summary><div class="details-inner">
+          <div class="logo-settings"><img id="logoPreview" src="default-logo.svg" alt="Anteprima del logo"><div><label for="logoInput">Logo</label><input id="logoInput" type="file" accept="image/png,image/jpeg,image/webp"><p class="field-hint">PNG, JPG o WebP, massimo 2 MB. Il file resta nell’archivio locale.</p><button type="button" id="removeLogo" class="text-button" disabled>Usa il logo standard</button><p id="logoStatus" class="field-hint" role="status"></p></div></div>
+          <label for="sellerName">Nome</label><input id="sellerName" name="sellerName" placeholder="Es. Studio Demo">
+          <label for="sellerStreet">Indirizzo</label><input id="sellerStreet" name="sellerStreet" placeholder="Es. Via Esempio 1">
+          <label for="sellerCity">CAP, città e provincia</label><input id="sellerCity" name="sellerCity" placeholder="Es. 00100 Roma (RM)">
+          <label for="sellerTax">Codice fiscale</label><input id="sellerTax" name="sellerTax" placeholder="Inserisci il codice fiscale">
+          <label for="sellerVat">Partita IVA</label><input id="sellerVat" name="sellerVat" placeholder="Inserisci la partita IVA">
+          <label for="accountHolder">Intestato a</label><input id="accountHolder" name="accountHolder" placeholder="Es. Studio Demo">
+          <label for="iban">IBAN</label><input id="iban" name="iban" placeholder="Inserisci l’IBAN">
+          <label for="notes">Note</label><textarea id="notes" name="notes" rows="4">Operazione senza applicazione dell’IVA ai sensi dell’art. 1, commi 54-89, L. 190/2014.
+Compenso non soggetto a ritenuta d’acconto ai sensi dell’art. 1, comma 67, L. 190/2014.</textarea>
+          <button type="button" id="saveProfile" class="secondary-button save-profile">Salva intestazione e pagamento</button>
+        </div></details>
+        <p id="formError" class="form-error" role="alert" hidden></p>
+        <p id="formMessage" class="form-message" role="status" hidden></p>
+        <div class="save-actions"><button type="button" id="saveInvoices" class="primary-button">Salva pro forma</button><button type="button" id="newInvoice" class="secondary-button">Nuova</button></div>
+      </form>
+
+      <section class="preview-panel" aria-label="Anteprima pro forma"><div class="preview-toolbar"><div><span class="eyebrow">Anteprima in tempo reale</span><h2 id="previewHeading">Pro forma</h2></div><div id="previewSummary" class="preview-summary"></div></div><div id="preview" class="preview-list"></div><section class="archive" aria-labelledby="archiveHeading"><div class="archive-heading"><div><span class="eyebrow">Archivio locale</span><h2 id="archiveHeading">Documenti pro forma salvati</h2></div><span id="archiveCount"></span></div><div id="savedInvoices" class="archive-list"></div><div id="archiveSummary" class="archive-summary" aria-live="polite"></div></section></section>
+    </main>
+  </div>
+  <script type="module" src="app.js"></script>
+</body>
+</html>

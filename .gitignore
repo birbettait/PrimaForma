@@ -1,0 +1,11 @@
+data/
+logo.png
+*.sqlite3
+*.sqlite3-*
+*.db
+.env
+.env.*
+__pycache__/
+.playwright-mcp/
+node_modules/
+*.pdf
